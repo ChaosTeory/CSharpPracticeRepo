@@ -2,28 +2,44 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class Unit : MonoBehaviour {
 
-    public string name;
-    public float weight;
-    public Vector3 size;
+    public static Unit Instance;
+   
 
-    public string pubSSS = "public string";
-    private string priSSS = "private string";
-    protected string proSSS = "protected string";
-    internal string intSSS = "internal string";
-    protected internal string proIntSSS = "protected internal string";
-
-
-
-    public Unit() { }
-    public Unit(string name, float weight, Vector3 size)
+    public void Awake()
     {
-        this.name = name;
-        this.weight = weight;
-        this.size = size;
+        Instance = this;
     }
+
+    [System.Serializable]
+    public class Select : ScriptableObject
+    {
+        [SerializeField]
+        public int selection;
+        [SerializeField]
+        public string textArea;
+    }
+    public List<Select> selects;
+
+
+    [System.Serializable]
+    public enum Selections
+    {
+        Cube,
+        Rectangle,
+        Sphere,
+        Cone
+    };
+
+
+    //public Unit() { }
+    //public Unit(string name, float weight, Vector3 size)
+    //{
+    //    this.name = name;
+    //    this.weight = weight;
+    //    this.size = size;
+    //}
 
 
 
