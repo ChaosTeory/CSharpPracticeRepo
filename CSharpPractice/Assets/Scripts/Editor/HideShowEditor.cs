@@ -11,80 +11,151 @@ public class HideShowEditor : Editor
 
     private void OnEnable()
     {
-        selectsProperty = serializedObject.FindProperty("selects");
     }
 
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
 
-        SerializedProperty spCopy = selectsProperty.Copy();
 
-        if(spCopy.isArray)
+        selectsProperty = serializedObject.FindProperty("selects");
+
+        //LogProperties(serializedObject);
+
+        if (selectsProperty.isArray)
         {
             int arrayLength = 0;
 
-            spCopy.Next(true); // skip generic field
-            spCopy.Next(true); // advance to array size field
 
-            // Get the array size
-            arrayLength = spCopy.intValue;
-
-            spCopy.Next(true); // advance to first array index
-
-            // Write values to list
-            List<Unit.Select> values = new List<Unit.Select>(arrayLength);
-            int lastIndex = arrayLength - 1;
-
-
-            for (int i = 0; i < arrayLength; i++)
+            selectsProperty.Next(true);
+            //Create List Title
+            EditorGUILayout.PropertyField(selectsProperty, false);
+            if(selectsProperty.isExpanded)
             {
-                //EditorGUILayout.PropertyField(selectsParent, false);
-                values.Add(spCopy.objectReferenceValue as System.Object as Unit.Select);
-                if (i < lastIndex) spCopy.Next(true);
+                selectsProperty.Next(true);
+
+                EditorGUI.indentLevel++;
+                EditorGUILayout.PropertyField(selectsProperty, false);
+                //Get array size
+                arrayLength = selectsProperty.intValue;
+
+                selectsProperty.Next(false);
+
+
+                int lastIndex = arrayLength - 1;
+
+                for (int i = 0; i < arrayLength; i++)
+                {
+
+                    SerializedProperty spSelection = selectsProperty.FindPropertyRelative("selection");
+                    EditorGUILayout.PropertyField(spSelection);
+                    Unit.Selections _selection = (Unit.Selections)spSelection.enumValueIndex;
+
+                    switch (_selection)
+                    {
+                        case Unit.Selections.Cube:
+                            SerializedProperty spSelectionName = selectsProperty.FindPropertyRelative("selectionName");
+                            EditorGUILayout.PropertyField(spSelectionName, false);
+                            break;
+                    }
+
+                   // Unit.SelectGround selectGrounds =
+                   //     serializedObject.FindProperty(string.Format("selectGrounds.Array.data[{0}]", i).objectReferenceValue as Unit.SelectGround;
+                    //EditorGUILayout.PropertyField(selectGrounds, false);
+
+
+
+                    selectsProperty.Next(false);
+                }
             }
-
-            for(int k=0; k<values.Count; k++)
-                Debug.Log("Value " + k + ": " + values[k]);
-
-
-            for (int i = 0; i < values.Count; i++)
-            {
-                EditorGUILayout.IntField(values[i].selection);
-                EditorGUILayout.LabelField(values[i].textArea);
-
-
-                //EditorGUILayout.
-
-                ////SerializedProperty spSelection = spCopy.FindPropertyRelative("selection");
-
-                //Unit.Selections _selection = (Unit.Selections)spCopy.FindPropertyRelative("selection").enumValueIndex;
-
-                //switch (_selection)
-                //{
-                //    case Unit.Selections.Cube:
-                //        SerializedProperty sp = spCopy.FindPropertyRelative("textArea");
-                //        EditorGUILayout.PropertyField(sp, false);
-                //        break;
-                //}
-            }
-
-            DrawDefaultInspector();
-
-            //serializedObject.ApplyModifiedProperties();
-
-
-            //    while (selectsParent.Next(true))
-            //{
-
-
-            //}
-            //foreach (SerializedProperty selectsMain in selectsParent)
-            //{
-            //EditorGUILayout.PropertyField(selectsMain, true);
-
-            //}
         }
+        serializedObject.ApplyModifiedProperties();
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //if(spCopy.isArray)
+        //{
+        //    int arrayLength = 0;
+
+        //    spCopy.Next(true); // skip generic field
+        //    spCopy.Next(true); // advance to array size field
+
+        //    // Get the array size
+        //    arrayLength = spCopy.intValue;
+
+        //    spCopy.Next(true); // advance to first array index
+
+        //    // Write values to list
+        //    List<Unit> values = new List<Unit>(arrayLength);
+        //    int lastIndex = arrayLength - 1;
+
+
+        //    for (int i = 0; i < arrayLength; i++)
+        //    {
+        //        //EditorGUILayout.PropertyField(selectsParent, false);
+        //        values.Add(spCopy.objectReferenceValue as System.Object as Unit);
+        //        if (i < lastIndex) spCopy.Next(true);
+        //    }
+
+        //    List<Unit.Select> _list = new List<Unit.Select>();
+
+        //    for(int k=0; k < values.Count; k++)
+        //    {
+        //        values[k] = (Unit)EditorGUILayout.ObjectField(values[k], typeof(Unit));
+
+
+        //    }
+
+        //    //Debug.Log("Value " + k + ": " + values[k]);
+
+
+        //    for (int i = 0; i < values.Count; i++)
+        //    {
+        //        //EditorGUILayout.IntField(values[i].selection);
+        //        //EditorGUILayout.LabelField(values[i].textArea);
+
+
+        //        //EditorGUILayout.
+
+        //        ////SerializedProperty spSelection = spCopy.FindPropertyRelative("selection");
+
+        //        //Unit.Selections _selection = (Unit.Selections)spCopy.FindPropertyRelative("selection").enumValueIndex;
+
+        //        //switch (_selection)
+        //        //{
+        //        //    case Unit.Selections.Cube:
+        //        //        SerializedProperty sp = spCopy.FindPropertyRelative("textArea");
+        //        //        EditorGUILayout.PropertyField(sp, false);
+        //        //        break;
+        //        //}
+        //    }
+
+        //    //DrawDefaultInspector();
+
+        //    serializedObject.ApplyModifiedProperties();
+
+
+        //    //    while (selectsParent.Next(true))
+        //    //{
+
+
+        //    //}
+        //    //foreach (SerializedProperty selectsMain in selectsParent)
+        //    //{
+        //    //EditorGUILayout.PropertyField(selectsMain, true);
+
+        //    //}
+        //}
     }
 
 
@@ -115,7 +186,7 @@ public class HideShowEditor : Editor
         
         while (true)
         {
-            Debug.Log("name = " + sp.name + " type = " + sp.type);
+            Debug.Log("NAME = " + sp.name + " ------- TYPE = " + sp.type);
             if (!sp.Next(includeChildren)) break;
         }
     }

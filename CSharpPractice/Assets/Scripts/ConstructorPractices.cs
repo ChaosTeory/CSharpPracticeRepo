@@ -23,10 +23,38 @@ public class ConstructorPractices : MonoBehaviour {
         //ConstructorPractices cp = new ConstructorPractices();
         x = 5;
         y = 3;
-	}
+
+        int current, last;
+
+        (int ccurrent, int llast) = GetNumber("text");
+
+        Debug.Log("Current: " + ccurrent);
+        Debug.Log("Last: " + llast);
+
+    }
+
+    public List<string> allStrings;
+
+    public (int, int) GetNumber(string s)
+    {
+        int i = 0;
+        int k = 1;
+
+        return (i, k);
+    }
+
+    public float GetTime() => Time.time * 10;
 	
 	// Update is called once per frame
 	void Update () {
-		
+
+        float _f;
+        _f = GetTime();
+
+        Debug.Log(GetNumber(""));
+
+
 	}
+
+    
 }
